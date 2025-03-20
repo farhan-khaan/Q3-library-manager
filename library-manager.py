@@ -116,7 +116,6 @@ elif nav_options == "➕ Add Book":
             st.balloons()
 
     if st.session_state.book_added:
-        st.markdown("<div class='success-message'>Book added successfully!</div>", unsafe_allow_html=True)
         st.session_state.book_added = False
 
 elif nav_options == "🔍 Search Books":
@@ -147,6 +146,3 @@ elif nav_options == "🔍 Search Books":
                 st.markdown("---")
         else:
             st.write("No matching books found.")
-
-st.markdown("---")
-st.markdown("<p style='text-align: center;'>© 2025, Library Management by Farhan Khan</p>", unsafe_allow_html=True)
