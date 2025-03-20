@@ -21,6 +21,9 @@ st.set_page_config(
 # Initialize session state if not set
 if "library" not in st.session_state:
     st.session_state.library = []
+    
+if "book_added" not in st.session_state:
+    st.session_state.book_added = False
 
 # Load Lottie animation function
 def load_lottieurl(url):
@@ -63,6 +66,9 @@ if nav_options == "📚 View Library":
         for book in st.session_state.library:
             st.markdown(f"**Title:** {book['title']}")
             st.markdown(f"**Author:** {book['author']}")
+            st.markdown(f"**Genre:** {book['genre']}")
+            st.markdown(f"**Publication Year:** {book['publication_year']}")
+            st.markdown(f"**Read Status:** {'Read' if book['read'] else 'Unread'}")
             if book.get('image'):
                 st.image(book['image'], width=150)
             if book.get('pdf'):
@@ -73,22 +79,49 @@ if nav_options == "📚 View Library":
 
 elif nav_options == "➕ Add Book":
     st.subheader("➕ Add a New Book")
-    title = st.text_input("Book Title")
-    author = st.text_input("Author")
-    image = st.file_uploader("Upload Book Cover (Optional)", type=["png", "jpg", "jpeg"])
-    pdf = st.file_uploader("Upload Book PDF (Optional)", type=["pdf"])
-    
-    if st.button("Add Book"):
-        if title and author:
-            book_data = {"title": title, "author": author, "image": None, "pdf": None}
+    with st.form(key='add_book_form'):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            title = st.text_input("Book Title", max_chars=100)
+            author = st.text_input("Author", max_chars=100)
+            publication_year = st.number_input("Publication Year", min_value=1000, max_value=datetime.now().year, step=1, value=2023)
+        
+        with col2:
+            genre = st.selectbox("Genre", [
+                "Fiction", "Non-Fiction", "Science", "Technology", "Fantasy", "Romance", "Poetry", "Self-help", "Art", "Religion", "History", "Other"
+            ])
+            read_status = st.radio("Read Status", ["Read", "Unread"], horizontal=True)
+            read_bool = read_status == "Read"
+        
+        image = st.file_uploader("Upload Book Cover (Optional)", type=["png", "jpg", "jpeg"])
+        pdf = st.file_uploader("Upload Book PDF (Optional)", type=["pdf"])
+        
+        submit_button = st.form_submit_button(label="Add Book")
+
+        if submit_button and title and author:
+            book_data = {
+                "title": title,
+                "author": author,
+                "publication_year": publication_year,
+                "genre": genre,
+                "read": read_bool,
+                "image": None,
+                "pdf": None
+            }
             if image is not None:
                 book_data["image"] = image
             if pdf is not None:
                 book_data["pdf"] = pdf
+            
             st.session_state.library.append(book_data)
+            st.session_state.book_added = True
             st.success("Book added successfully!")
-        else:
-            st.error("Please provide both title and author.")
+            st.balloons()
+
+    if st.session_state.book_added:
+        st.markdown("<div class='success-message'>Book added successfully!</div>", unsafe_allow_html=True)
+        st.session_state.book_added = False
 
 elif nav_options == "🔍 Search Books":
     st.subheader("🔍 Search Books")
