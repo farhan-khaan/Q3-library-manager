@@ -144,7 +144,19 @@ elif nav_options == "🔍 Search Books":
 
 elif nav_options == "📊 Library Statistics":
     st.subheader("📊 Library Statistics")
-    st.write("Statistics visualization...")
+    if st.session_state.library:
+        df = pd.DataFrame(st.session_state.library)
+        genre_count = df['genre'].value_counts().reset_index()
+        genre_count.columns = ['Genre', 'Count']
+        fig = px.bar(genre_count, x='Genre', y='Count', title='Books per Genre', color='Genre')
+        st.plotly_chart(fig)
+        
+        read_status_count = df['read'].value_counts().reset_index()
+        read_status_count.columns = ['Read Status', 'Count']
+        fig_pie = px.pie(read_status_count, names='Read Status', values='Count', title='Read vs Unread Books')
+        st.plotly_chart(fig_pie)
+    else:
+        st.write("No books in the library to show statistics.")
 
 st.markdown("---")
 st.markdown("© 2025, Library Management by Farhan Khan", unsafe_allow_html=True)
