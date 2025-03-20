@@ -89,7 +89,7 @@ elif nav_options == "➕ Add Book":
         
         with col2:
             genre = st.selectbox("Genre", [
-                "Fiction", "Non-Fiction", "Science", "Technology", "Fantasy", "Romance", "Poetry", "Self-help", "Art", "Religion", "History", "Other"
+              "Information Technology", "Fiction", "Non-Fiction", "Science", "Technology", "Fantasy", "Romance", "Poetry", "Self-help", "Art", "Religion", "History", "Other"
             ])
             read_status = st.radio("Read Status", ["Read", "Unread"], horizontal=True)
             read_bool = read_status == "Read"
