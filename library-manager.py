@@ -121,7 +121,25 @@ elif nav_options == "➕ Add Book":
 
 elif nav_options == "🔍 Search Books":
     st.subheader("🔍 Search Books")
-    st.write("Search functionality...")
+    search_query = st.text_input("Enter book title or genre to search:")
+    
+    if search_query:
+        results = [book for book in st.session_state.library if search_query.lower() in book['title'].lower() or search_query.lower() in book['genre'].lower()]
+        
+        if results:
+            for book in results:
+                st.markdown(f"**Title:** {book.get('title', 'Unknown Title')}")
+                st.markdown(f"**Author:** {book.get('author', 'Unknown Author')}")
+                st.markdown(f"**Genre:** {book.get('genre', 'Unknown Genre')}")
+                st.markdown(f"**Publication Year:** {book.get('publication_year', 'Unknown Year')}")
+                st.markdown(f"**Read Status:** {'Read' if book.get('read', False) else 'Unread'}")
+                if book.get('image'):
+                    st.image(book['image'], width=150)
+                if book.get('pdf'):
+                    st.markdown(f"[📄 Download PDF]({book['pdf']})")
+                st.markdown("---")
+        else:
+            st.write("No matching books found.")
 
 elif nav_options == "📊 Library Statistics":
     st.subheader("📊 Library Statistics")
