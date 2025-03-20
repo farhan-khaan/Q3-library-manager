@@ -64,11 +64,11 @@ if nav_options == "📚 View Library":
     st.subheader("📖 Your Library")
     if st.session_state.library:
         for book in st.session_state.library:
-            st.markdown(f"**Title:** {book['title']}")
-            st.markdown(f"**Author:** {book['author']}")
-            st.markdown(f"**Genre:** {book['genre']}")
-            st.markdown(f"**Publication Year:** {book['publication_year']}")
-            st.markdown(f"**Read Status:** {'Read' if book['read'] else 'Unread'}")
+            st.markdown(f"**Title:** {book.get('title', 'Unknown Title')}")
+            st.markdown(f"**Author:** {book.get('author', 'Unknown Author')}")
+            st.markdown(f"**Genre:** {book.get('genre', 'Unknown Genre')}")
+            st.markdown(f"**Publication Year:** {book.get('publication_year', 'Unknown Year')}")
+            st.markdown(f"**Read Status:** {'Read' if book.get('read', False) else 'Unread'}")
             if book.get('image'):
                 st.image(book['image'], width=150)
             if book.get('pdf'):
@@ -106,13 +106,9 @@ elif nav_options == "➕ Add Book":
                 "publication_year": publication_year,
                 "genre": genre,
                 "read": read_bool,
-                "image": None,
-                "pdf": None
+                "image": image,
+                "pdf": pdf
             }
-            if image is not None:
-                book_data["image"] = image
-            if pdf is not None:
-                book_data["pdf"] = pdf
             
             st.session_state.library.append(book_data)
             st.session_state.book_added = True
