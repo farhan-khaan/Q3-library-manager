@@ -122,9 +122,10 @@ elif nav_options == "➕ Add Book":
 elif nav_options == "🔍 Search Books":
     st.subheader("🔍 Search Books")
     search_query = st.text_input("Enter book title or genre to search:")
+    search_button = st.button("Search")
     
-    if search_query:
-        results = [book for book in st.session_state.library if search_query.lower() in book['title'].lower() or search_query.lower() in book['genre'].lower()]
+    if search_button and search_query:
+        results = [book for book in st.session_state.library if search_query.lower() in book.get('title', '').lower() or search_query.lower() in book.get('genre', '').lower()]
         
         if results:
             for book in results:
